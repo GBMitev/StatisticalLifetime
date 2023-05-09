@@ -14,6 +14,6 @@ Sigmas = [1,2]
 
 Cores = int(input("Number of cores:"))
 
-Results = Tau_Gaussian_MP(df, Sigmas, Bins, Cores = Cores, head = 20)
+Results = Tau_Gaussian_MP(df, Sigmas, Bins, Cores = Cores)
 Results.to_csv("Testing_out.csv")
 # %%
