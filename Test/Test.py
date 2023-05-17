@@ -1,6 +1,9 @@
 # %%
-from ..v230516_2 import StatisticalLifetime
-
+import sys
+sys.path.append("..")
+# %%
+from v230516_2.StatisticalLifetime import *
+# %%
 # Importing DataFrame
 fname = "./Testing.csv"
 df = pd.read_csv(fname)
@@ -14,6 +17,6 @@ Sigmas = [1,2]
 
 Cores = int(input("Number of cores:"))
 
-Results = Tau_Gaussian_MP(df, Sigmas, Bins, Cores = Cores)
-Results.to_csv("Testing_out.csv")
+#Results = Tau_Gaussian_MP(df, Sigmas, Bins, Cores = Cores)
+#Results.to_csv("Testing_out.csv")
 # %%
