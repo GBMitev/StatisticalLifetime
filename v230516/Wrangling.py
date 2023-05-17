@@ -1,9 +1,9 @@
 # %%
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+# import pandas as pd
+# import numpy as np
+# import matplotlib.pyplot as plt
 
-def Filter(df:pd.DataFrame,J:float,v:int,ef:str):
+def Filter(df,J:float,v:int,ef:str):
     '''
     Returns geometries and energies for a given energy level. 
 
@@ -49,7 +49,7 @@ def Cutoff(L: list,E: list,NSigma: float=np.inf):
     data = np.transpose(data)
     return data
 
-def AllowedQuantumNumbers(df:pd.DataFrame):
+def AllowedQuantumNumbers(df):
     '''
     Returns all quantum number subsets in the total DataFrame
 
@@ -69,7 +69,7 @@ def AllowedQuantumNumbers(df:pd.DataFrame):
     return QN
 
 def PlotLE(L,E,line = False,J = None, v = None, ef = None):
-    plt.figure(figsize = (9,7)) 
+    plt.figure(figsize = (9,9)) 
     
     fmt = "k." if line == False else "k"
     plt.plot(L,E, fmt)

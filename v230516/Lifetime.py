@@ -1,27 +1,4 @@
 # %%
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import scipy.stats as stats
-
-from scipy          import interpolate
-from quantiphy      import Quantity
-from scipy.optimize import curve_fit
-from tqdm           import tqdm
-
-#https://docs.scipy.org/doc/scipy/tutorial/interpolate/smoothing_splines.html
-from scipy.interpolate import splrep, BSpline
-#https://python.plainenglish.io/my-favorite-way-to-smooth-noisy-data-with-python-bd28abe4b7d0
-from scipy.signal import savgol_filter
-
-
-from Distributions  import Lorentzian, Gaussian
-from Histogram      import GetHistogramData ,GetCenters, GetXrange, PlotHistogram
-from Fitting        import FitHistogram
-from Wrangling      import Filter ,Cutoff ,AllowedQuantumNumbers ,PlotLE
-from Estimates      import MeasureFWHM ,PlotGamma ,GammaEstimate
-from Operations     import SavGol, SplineSmoothing
-
 def LifeTime(df,J,v,ef,NSigma,bins):
     '''
     Returns lifetime for a given energy level with Cutoff, NSigma
@@ -119,6 +96,3 @@ def StatisticalLifetime(Lifetimes, Bins, params=False):
     Uncertainty      = popt[1]  
 
     return (MeasuredLifeitme, Uncertainty) if params ==False else (MeasuredLifeitme, Uncertainty, popt, Count, Edges, Centers)
-
-
-# %%

@@ -1,10 +1,10 @@
 # %%
-import numpy as np
 from scipy.optimize import curve_fit
-from Histogram import GetCenters
-from Distributions import Lorentzian
 from quantiphy      import Quantity
 
+#Dependencies:
+#from Histogram import GetCenters
+#from Distributions import Lorentzian
 
 def FitHistogram(Count,Edges, formatted = True, guesses = None):
     '''
@@ -35,4 +35,3 @@ def FitHistogram(Count,Edges, formatted = True, guesses = None):
     lifetime = hbar/(gamma)
 
     return [popt, Quantity(lifetime,"s")] if formatted == True else [popt, lifetime]
-

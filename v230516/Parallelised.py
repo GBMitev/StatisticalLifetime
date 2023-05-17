@@ -1,10 +1,4 @@
 # %%
-from Lifetime import *
-from concurrent.futures import ProcessPoolExecutor
-from functools import partial
-import ast
-from uncertainties import ufloat
-
 def Tau_Gaussian(df, NSigmas, Bins, J, v, ef):
     StatLifetimes = {}
     
@@ -35,7 +29,7 @@ def Tau_Gaussian(df, NSigmas, Bins, J, v, ef):
 def Tau_Gaussian_Tuple(df, NSigmas, Bins, AQN):
     return Tau_Gaussian(df, NSigmas, Bins, AQN[0],AQN[1],AQN[2])
 
-def AQN_Generator(AQN: pd.DataFrame) -> tuple:
+def AQN_Generator(AQN) -> tuple:
     for J, v, ef in AQN.itertuples(index=False):
         yield J, v, ef
 
