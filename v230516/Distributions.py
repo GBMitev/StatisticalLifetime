@@ -1,5 +1,5 @@
 # %%
-import numpy as np
+from .Dependencies import *
 
 def Lorentzian(x: list,x0: float,Gamma: float):
     '''

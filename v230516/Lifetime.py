@@ -1,4 +1,6 @@
 # %%
+from .Dependencies import *
+
 def LifeTime(df,J,v,ef,NSigma,bins):
     '''
     Returns lifetime for a given energy level with Cutoff, NSigma

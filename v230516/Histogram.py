@@ -1,7 +1,5 @@
 # %%
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import interpolate
+from .Dependencies import *
 
 def GetHistogramData(E, bins, Centered = True):
     '''

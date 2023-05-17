@@ -1,10 +1,7 @@
 # %%
-from scipy.optimize import curve_fit
-from quantiphy      import Quantity
-
-#Dependencies:
-#from Histogram import GetCenters
-#from Distributions import Lorentzian
+from .Dependencies import *
+from .Histogram import GetCenters
+from .Distributions import Lorentzian
 
 def FitHistogram(Count,Edges, formatted = True, guesses = None):
     '''
