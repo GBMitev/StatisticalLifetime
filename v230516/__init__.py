@@ -23,4 +23,5 @@ from .Fitting       import *
 from .Histogram     import *
 from .Lifetime      import *
 from .Parallelised  import *
+from .Wrangling     import *
 # %%

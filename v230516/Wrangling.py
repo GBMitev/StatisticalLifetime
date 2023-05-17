@@ -1,9 +1,9 @@
 # %%
-# import pandas as pd
-# import numpy as np
-# import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
-def Filter(df,J:float,v:int,ef:str):
+def Filter(df,J:float,v:int,ef:str, state=None):
     '''
     Returns geometries and energies for a given energy level. 
 
@@ -18,8 +18,12 @@ def Filter(df,J:float,v:int,ef:str):
         E   = Energies              : np.1darray (float)    
     '''
 
-    df = df[(df["J"]==J)&(df["v"]==v)&(df["e/f"]==ef)].sort_values("L")
-    L,E = df["L"].to_numpy(),df["E"].to_numpy()
+    if state is None:
+        df = df[(df["J"]==J)&(df["v"]==v)&(df["e/f"]==ef)].sort_values("L")
+        L,E = df["L"].to_numpy(),df["E"].to_numpy()
+    elif state is not None:
+        df = df[(df["J"]==J)&(df["v"]==v)&(df["e/f"]==ef)&(df["State"]==state)].sort_values("L")
+        L,E = df["L"].to_numpy(),df["E"].to_numpy()
     
     return L,E
 
