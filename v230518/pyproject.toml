@@ -2,7 +2,7 @@
 name = "slt"
 version = "0.1.0"
 description = "Write this later"
-authors = ["GBMitev <georgibogdanovmitev@gmail.com>"]
+authors = ["GBMitev <georgi.mitev.16@ucl.ac.uk>","Charlesy B <charles.bowesman.20@ucl.ac.uk>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
