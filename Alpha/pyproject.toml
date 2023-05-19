@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "StatisticalLifetimes"
+version = "0.1.0"
+description = "Write this later"
+authors = ["GBMitev <georgi.mitev.16@ucl.ac.uk>","Charlesy B <charles.bowesman.20@ucl.ac.uk>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+numpy = "^1.24.3"
+pandas = "^2.0.1"
+matplotlib = "^3.7.1"
+scipy = "^1.10.1"
+quantiphy = "^2.19"
+tqdm = "^4.65.0"
+uncertainties = "^3.1.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
