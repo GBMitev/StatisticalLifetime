@@ -7,6 +7,8 @@ import scipy.stats as stats
 from quantiphy      import Quantity
 from scipy.optimize import curve_fit
 from tqdm           import tqdm
+from scipy import interpolate
+
 
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
