@@ -24,4 +24,14 @@
 # from .Lifetime      import LifeTime, LifeTimeOverBins, StatisticalLifetime
 # from .Parallelised  import Tau_Gaussian,Tau_Gaussian_Tuple,AQN_Generator,UnpackingStatLifeTimes,Tau_Gaussian_MP
 # from .Wrangling     import Filter, Cutoff, AllowedQuantumNumbers, PlotLE
+
+__all__ = ["Distributions","Fitting","Histogram","Lifetime","Parallelised","Wrangling"]
+
+def sltHelp():
+    print("Distributions : Lorentzian,Gaussian")
+    print("Fitting       : FitHistogram")
+    print("Histogram     : GetHistogramData ,GetCenters ,GetXrange ,PlotHistogram ,MeasureFWHM ,PlotGamma ,GammaEstimate")
+    print("Lifetime      : LifeTime, LifeTimeOverBins, StatisticalLifetime")
+    print("Parallelised  : Tau_Gaussian,Tau_Gaussian_Tuple,AQN_Generator,UnpackingStatLifeTimes,Tau_Gaussian_MP")
+    print("Wrangling     : Filter, Cutoff, AllowedQuantumNumbers, PlotLE")
 # # %%
