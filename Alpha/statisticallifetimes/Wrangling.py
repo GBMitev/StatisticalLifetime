@@ -64,7 +64,8 @@ def AllowedQuantumNumbers(df):
     QN = df.groupby(["J","v","e/f"], as_index=False).agg({"L":"count"})[["J","v","e/f","L"]]
     
     if len(QN[QN["L"]!=max(QN["L"])]) != 0:
-        raise ValueError("Inconsistent quantum number representation over geometries. Check your data.")
+        print("Inconsistent quantum number representation over geometries. Check your data.")
+        #raise ValueError("Inconsistent quantum number representation over geometries. Check your data.")
     
     QN = QN[["J","v","e/f"]]
 

@@ -5,7 +5,7 @@ from .Wrangling import Filter, Cutoff
 from .Histogram import GetHistogramData, GammaEstimate, GetCenters
 from .Fitting import FitHistogram
 
-def LifeTime(df,J,v,ef,NSigma,bins):
+def LifeTime(df,J,v,ef,NSigma,bins,Gamma = False):
     '''
     Returns lifetime for a given energy level with Cutoff, NSigma
 
@@ -15,7 +15,8 @@ def LifeTime(df,J,v,ef,NSigma,bins):
         v           = v quantum number          : value (int) 
         ef          = e/f quantum number        : value (str)
         NSigma      = Number of Std for cutoff  : value (float)
-        bins        = Number of Bins            : value (float)   
+        bins        = Number of Bins            : value (float) 
+        Gamma       = Return Gamma guess and fit: bool    
     Outputs:
         Lifetime    = Lifetime                  : value (float)
         Gamma_Guess = Gamma estimate            : value (float)
@@ -36,7 +37,7 @@ def LifeTime(df,J,v,ef,NSigma,bins):
     
     Gamma_Fit = popt[1]
 
-    return Lifetime, Gamma_Guess, Gamma_Fit
+    return Lifetime, popt[0], Mean if Gamma == False else Lifetime, popt[0], Mean, Gamma_Guess, Gamma_Fit
 
 def LifeTimeOverBins(df, J, v, ef, NSigma, Bins, progress_bar = False):
     '''
@@ -54,21 +55,29 @@ def LifeTimeOverBins(df, J, v, ef, NSigma, Bins, progress_bar = False):
     
     Outputs:
         ActiveBins  = Bin numbers for which a fit exists : list (int)
-        Lifeitmes   = Lifetimes by bin number
+        Lifeitmes   = Lifetimes by bin number            : list (float)
+        CenterShift = Lorentzian center                  : list (float)
+        LineMean    = Mean value of E                    : list (float)
     '''
-    Lifetimes = [] 
-    ActiveBins = []
-    
+    Lifetimes   = [] 
+    ActiveBins  = []
+    CenterShift = []
+    LineMean    = []
+
     if progress_bar == True:
         Bins = tqdm(Bins, desc=f"NSigma = {NSigma}, J = {J}, v = {v}, e/f = {ef}")
 
     for bin in Bins:
         try:
             Lifetimes.append(LifeTime(df,J,v,ef,NSigma,bin)[0])
+            
+            CenterShift.append(LifeTime(df,J,v,ef,NSigma,bin)[1])
+            LineMean   .append(LifeTime(df,J,v,ef,NSigma,bin)[2])
+
             ActiveBins.append(bin)
         except:
             pass
-    return ActiveBins, Lifetimes
+    return ActiveBins, Lifetimes#, CenterShift, LineMean
 
 def StatisticalLifetime(Lifetimes, Bins, params=False):
     '''
@@ -86,9 +95,9 @@ def StatisticalLifetime(Lifetimes, Bins, params=False):
         Uncertainty      = np.nan
         return MeasuredLifeitme, Uncertainty
         #raise ValueError(f"More than half your fits failed. Out of {len(Bins)}, {len(Lifetimes)} Succeeded")
+    print(f"The current bin number is {np.floor(len(Lifetimes)/10)}")
     
     bin_number = int(np.floor(len(Lifetimes)/10))
-
     Count, Edges, Mean = GetHistogramData(np.array(Lifetimes),bin_number,Centered=False)
 
     Centers = GetCenters(Edges)
@@ -96,9 +105,13 @@ def StatisticalLifetime(Lifetimes, Bins, params=False):
     EstimatedMean = np.mean(Lifetimes)
     EstimatedSTD  = np.std(Lifetimes)
 
-    popt = curve_fit(Gaussian,Centers, Count, p0 = [EstimatedMean, EstimatedSTD])[0]
+    try:
+        popt = curve_fit(Gaussian,Centers, Count, p0 = [EstimatedMean, EstimatedSTD])[0]
 
-    MeasuredLifeitme = popt[0]  
-    Uncertainty      = popt[1]  
+        MeasuredLifeitme = popt[0]  
+        Uncertainty      = popt[1]  
 
-    return (MeasuredLifeitme, Uncertainty) if params ==False else (MeasuredLifeitme, Uncertainty, popt, Count, Edges, Centers)
+        return (MeasuredLifeitme, Uncertainty) if params ==False else (MeasuredLifeitme, Uncertainty, popt, Count, Edges, Centers)
+
+    except:
+        return (np.nan, np.nan)
