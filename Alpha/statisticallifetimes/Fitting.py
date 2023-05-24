@@ -24,9 +24,9 @@ def FitHistogram(Count,Edges, formatted = True, guesses = None):
         guesses = guesses        
 
     popt = curve_fit(Lorentzian,Centers,Count,p0=guesses)[0]
-    HalfWidth = popt[1]
+    FWHM = popt[1]
 
-    gamma = HalfWidth*1.98630e-23
+    gamma = FWHM*1.98630e-23
     hbar = 1.054571817e-34
 
     lifetime = hbar/(gamma)

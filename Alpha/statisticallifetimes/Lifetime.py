@@ -5,7 +5,7 @@ from .Wrangling import Filter, Cutoff
 from .Histogram import GetHistogramData, GammaEstimate, GetCenters
 from .Fitting import FitHistogram
 
-def LifeTime(df,J,v,ef,NSigma,bins,Gamma = False):
+def LifeTime(df,J,v,ef,NSigma,bins):
     '''
     Returns lifetime for a given energy level with Cutoff, NSigma
 
@@ -28,16 +28,17 @@ def LifeTime(df,J,v,ef,NSigma,bins,Gamma = False):
 
     Count, Edges, Mean = GetHistogramData(E, bins)
 
-    Gamma_Guess = GammaEstimate(Edges, Count, Plot = False)
+    FWHM_Guess  = GammaEstimate(Edges, Count, Plot = False)
     x0_Guess    = 1
 
-    guesses = [Gamma_Guess,x0_Guess]
+    guesses = [FWHM_Guess,x0_Guess]
     
     popt, Lifetime = FitHistogram(Count, Edges,guesses = guesses)
     
-    Gamma_Fit = popt[1]
+    x0     = popt[0]
+    FWHM   = popt[1]
 
-    return Lifetime, popt[0], Mean if Gamma == False else Lifetime, popt[0], Mean, Gamma_Guess, Gamma_Fit
+    return Lifetime, x0, FWHM, Mean
 
 def LifeTimeOverBins(df, J, v, ef, NSigma, Bins, progress_bar = False):
     '''
@@ -59,25 +60,32 @@ def LifeTimeOverBins(df, J, v, ef, NSigma, Bins, progress_bar = False):
         CenterShift = Lorentzian center                  : list (float)
         LineMean    = Mean value of E                    : list (float)
     '''
-    Lifetimes   = [] 
-    ActiveBins  = []
-    CenterShift = []
-    LineMean    = []
+    Lifetimes  = [] 
+    ActiveBins = []
+    
+    x0         = []
+    FWHM       = []
+
+    Mean       = []
 
     if progress_bar == True:
         Bins = tqdm(Bins, desc=f"NSigma = {NSigma}, J = {J}, v = {v}, e/f = {ef}")
 
     for bin in Bins:
         try:
-            Lifetimes.append(LifeTime(df,J,v,ef,NSigma,bin)[0])
-            
-            CenterShift.append(LifeTime(df,J,v,ef,NSigma,bin)[1])
-            LineMean   .append(LifeTime(df,J,v,ef,NSigma,bin)[2])
-
+            Lifetimes .append(LifeTime(df,J,v,ef,NSigma,bin)[0])
             ActiveBins.append(bin)
+
+            x0        .append(LifeTime(df,J,v,ef,NSigma,bin)[1])
+            FWHM      .append(LifeTime(df,J,v,ef,NSigma,bin)[2])
+            Mean      .append(LifeTime(df,J,v,ef,NSigma,bin)[3])
         except:
             pass
-    return ActiveBins, Lifetimes#, CenterShift, LineMean
+    
+    dict = {"ActiveBins": ActiveBins, "Lifetimes":Lifetimes, "x0":x0, "FWHM":FWHM, "Mean":Mean}
+    
+    Fit_Info = pd.DataFrame(dict)
+    return Fit_Info
 
 def StatisticalLifetime(Lifetimes, Bins, params=False):
     '''
@@ -95,7 +103,6 @@ def StatisticalLifetime(Lifetimes, Bins, params=False):
         Uncertainty      = np.nan
         return MeasuredLifeitme, Uncertainty
         #raise ValueError(f"More than half your fits failed. Out of {len(Bins)}, {len(Lifetimes)} Succeeded")
-    print(f"The current bin number is {np.floor(len(Lifetimes)/10)}")
     
     bin_number = int(np.floor(len(Lifetimes)/10))
     Count, Edges, Mean = GetHistogramData(np.array(Lifetimes),bin_number,Centered=False)
@@ -115,3 +122,4 @@ def StatisticalLifetime(Lifetimes, Bins, params=False):
 
     except:
         return (np.nan, np.nan)
+    

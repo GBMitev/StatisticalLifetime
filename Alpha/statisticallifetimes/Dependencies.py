@@ -13,7 +13,7 @@ from scipy import interpolate
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 import ast
-from uncertainties import ufloat
+from uncertainties import ufloat,ufloat_fromstr
 
 #https://docs.scipy.org/doc/scipy/tutorial/interpolate/smoothing_splines.html
 from scipy.interpolate import splrep, BSpline
