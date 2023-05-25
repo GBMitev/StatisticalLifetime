@@ -1,4 +1,6 @@
 # %%
+from .Dependencies import *
+
 def Diff(x, fx, sampling_frequency = 1):
     """
     Input: 
@@ -33,11 +35,14 @@ def SavGol(Lifetimes, window_length = 100, polyorder = 1, **kwargs):
     Filtered = savgol_filter(Lifetimes, window_length=window_length, polyorder=polyorder, **kwargs)
     return [*Filtered]
 
-def SplineSmoothing(ActiveBins, Filtered, Bins):
+def SplineSmoothing(ActiveBins, Filtered, Bins, Degree = None):
     '''
     Nonsense
     '''
-    SplineSmoothed = BSpline(*splrep(ActiveBins, Filtered, s=len(Bins)))(Bins)
+
+    Degree = len(Bins) if Degree is None else Degree
+
+    SplineSmoothed = BSpline(*splrep(ActiveBins, Filtered, s=Degree))(Bins)
     return SplineSmoothed
 
 

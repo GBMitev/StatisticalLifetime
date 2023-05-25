@@ -2,7 +2,6 @@
 from .Dependencies import *
 from .Wrangling import *
 from .Lifetime import *
-import pickle
 
 def StatLT_Sigma(df, NSigmas, Bins, Quant_Nums):
     J, v, ef = Quant_Nums[0], Quant_Nums[1], Quant_Nums[2]
@@ -26,8 +25,8 @@ def StatLT_Sigma(df, NSigmas, Bins, Quant_Nums):
         MeasuredLT_Ave  = np.mean(MeasuredLT)
         Unc_Ave         = 1/len(MeasuredLT)*np.sqrt(sum(Unc**2))
     else:
-        MeasuredLT, Unc = np.nan, np.nan
-        return "return (J,v,ef, Tau,Tau_error,StatLifetimes)"
+        MeasuredLT = ufloat(np.nan,np.nan)
+        return (J,v,ef, MeasuredLT, SLTs, Fit_Infos)
     
     MeasuredLT = ufloat(MeasuredLT_Ave, Unc_Ave)
     
@@ -53,7 +52,7 @@ def StatLT_AllStates(df, NSigmas, Bins, Cores=4, head = None):
     return Results
 # %%
 # CLASSES TO STORE INFORMATION
-class Fit_Info_Storage:
+class Fit_Parameters:
     def __init__(self, dict):
         self.dict = dict
 
@@ -70,7 +69,7 @@ class Levels:
             ef                  = tuple[2]
             MeasuredLifetime    = tuple[3]
             SLTs                = tuple[4]
-            Fit_Info            = Fit_Info_Storage(tuple[5])
+            Fit_Info            = Fit_Parameters(tuple[5])
 
             SLT_Components = []
 
@@ -84,8 +83,20 @@ class Levels:
 
         self.FullDataSet = pd.DataFrame(data=tuples, columns=Columns)
             
-    def LifeTimes(self):
-        return self.FullDataSet[["J","v","e/f","Lifetime",*self.Sigmas_Used]]
+    def LifeTimes(self, **kwargs):
+        df = self.FullDataSet[["J","v","e/f","Lifetime",*self.Sigmas_Used]]
+
+        #Progressively filtering
+        J = kwargs["J"] if "J" in kwargs.keys() else df["J"]
+        df = df[df["J"]==J]
+
+        v = kwargs["v"] if "v" in kwargs.keys() else df["v"]
+        df = df[df["v"]==v] 
+        
+        ef = kwargs["ef"] if "ef" in kwargs.keys() else df["e/f"]
+        df = df[df["e/f"]==ef] 
+        
+        return df
     
     def Full_Fit_Infos(self):
         return self.FullDataSet[["J","v","e/f","Lifetime","Fit_Info"]]
@@ -103,15 +114,27 @@ class Levels:
         Fit_Info = df["Fit_Info"].to_numpy()[0].dict[f"{NSigma}"]
         return Fit_Info
 
-def Store_Levels(Levels, fname):
-    with open(fname, 'wb') as handle:
-        pickle.dump(Levels, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    def Get_null(self):
+        LT = self.LifeTimes()
 
-def Get_Levels(fname):
+        null = LT[np.isnan(unumpy.nominal_values(LT["Lifetime"]))==True].reset_index(drop = True)
+        return null
+    
+    def Get_nullnt(self):   
+        LT = self.LifeTimes()
+
+        nullnt = LT[np.isnan(unumpy.nominal_values(LT["Lifetime"]))==False].reset_index(drop = True)
+        return nullnt
+    
+    def to_slt(self,fname):
+        with open(fname, 'wb') as handle:
+            pickle.dump(self, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def read_slt(fname):
     with open(fname, 'rb') as handle:
         Levels = pickle.load(handle)
     return Levels
-
 # %%
 # def UnpackingStatLifeTimes(Levels, NSigmas):
 #     Columns = ["J","v","e/f"]+[str(i) for i in NSigmas]

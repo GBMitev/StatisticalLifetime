@@ -1,6 +1,6 @@
 # %%
 from .Dependencies import *
-from .Distributions import Lorentzian, Gaussian
+from .Distributions import Gaussian
 from .Wrangling import Filter, Cutoff
 from .Histogram import GetHistogramData, GammaEstimate, GetCenters
 from .Fitting import FitHistogram

@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import scipy.stats as stats
+import pickle
 
 from quantiphy      import Quantity
 from scipy.optimize import curve_fit
@@ -13,7 +14,7 @@ from scipy import interpolate
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 import ast
-from uncertainties import ufloat,ufloat_fromstr
+from uncertainties import ufloat,ufloat_fromstr,unumpy
 
 #https://docs.scipy.org/doc/scipy/tutorial/interpolate/smoothing_splines.html
 from scipy.interpolate import splrep, BSpline
