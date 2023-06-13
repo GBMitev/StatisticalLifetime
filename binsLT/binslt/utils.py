@@ -1,7 +1,7 @@
 # %%
-from .Dependencies import *
+from .dependencies import *
 
-def Diff(x, fx, sampling_frequency = 1):
+def diff(x, fx, sampling_frequency = 1):
     """
     Input: 
     x, fx: Input curve x and fx values - dtypes = np.array
@@ -21,7 +21,7 @@ def Diff(x, fx, sampling_frequency = 1):
     x = x[:(len(f_prime)-len(x))]
     return x, f_prime
 
-def SavGol(Lifetimes, window_length = 100, polyorder = 1, **kwargs):
+def sav_gol(Lifetimes, window_length = 100, polyorder = 1, **kwargs):
     '''
     Applies Savitzky-Golay filter on Lifetime data:
 
@@ -35,7 +35,7 @@ def SavGol(Lifetimes, window_length = 100, polyorder = 1, **kwargs):
     Filtered = savgol_filter(Lifetimes, window_length=window_length, polyorder=polyorder, **kwargs)
     return [*Filtered]
 
-def SplineSmoothing(ActiveBins, Filtered, Bins, Degree = None):
+def spline_smoothing(ActiveBins, Filtered, Bins, Degree = None):
     '''
     Nonsense
     '''
@@ -45,7 +45,7 @@ def SplineSmoothing(ActiveBins, Filtered, Bins, Degree = None):
     SplineSmoothed = BSpline(*splrep(ActiveBins, Filtered, s=Degree))(Bins)
     return SplineSmoothed
 
-def Chi(Obs, Calc, ddof=None, reduced = True):
+def chi_squared(Obs, Calc, ddof=None, reduced = True):
     "ChiSquared test"
     Obs = np.array([*Obs])
     Calc = np.array([*Calc])
@@ -62,11 +62,11 @@ def Chi(Obs, Calc, ddof=None, reduced = True):
 
     return (Chi_reduced, p_value) if reduced == True else (Chi, p_value)
 
-def MakePickle(fname, cucumber):
+def make_pickle(fname, cucumber):
     with open(fname, "wb") as handle:
         pickle.dump(cucumber, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-def ReadPickle(fname):
+def read_pickle(fname):
     with open(fname, "rb") as handle:
         cucumber = pickle.load(handle)
         return cucumber

@@ -1,7 +1,7 @@
 # %%
-from .Dependencies import *
-from .Wrangling import *
-from .Lifetime import *
+from .dependencies import *
+from .wrangling import *
+from .lifetime import *
 
 def StatLT_Sigma(df, NSigmas, Bins, Quant_Nums):
 
@@ -11,11 +11,11 @@ def StatLT_Sigma(df, NSigmas, Bins, Quant_Nums):
     Fit_Infos   = {}
 
     for NSigma in NSigmas:
-        Fit_Info                = LifeTimeOverBins(df, J, v, ef, NSigma, Bins)
+        Fit_Info                = lifetime_over_bins(df, J, v, ef, NSigma, Bins)
         Fit_Infos[f"{NSigma}"]  = Fit_Info
 
         Lifetimes               = Fit_Info["Lifetimes"].to_numpy()
-        SLTs[f"{NSigma}"]       = StatisticalLifetime(Lifetimes,Bins)
+        SLTs[f"{NSigma}"]       = statistical_lifetime(Lifetimes,Bins)
     
     data = [[val[0], val[1]] for val in SLTs.values() if np.isnan(val[0]) == False and np.isnan(val[1])==False]
 
@@ -39,9 +39,9 @@ def AQN_Generator(AQN) -> tuple:
 
 def StatLT_AllStates(df, NSigmas, Bins, Cores=4, head = None):
     if head is None:
-        AQN = AllowedQuantumNumbers(df)
+        AQN = allowed_quantum_numbers(df)
     else:
-        AQN = AllowedQuantumNumbers(df).head(head)
+        AQN = allowed_quantum_numbers(df).head(head)
     
     Executor = ProcessPoolExecutor(max_workers=Cores)
 

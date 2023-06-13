@@ -8,8 +8,9 @@ import pickle
 from quantiphy      import Quantity
 from scipy.optimize import curve_fit
 from tqdm           import tqdm
-from scipy import interpolate
-from scipy.stats import chi2
+from pandarallel    import pandarallel
+from scipy          import interpolate
+from scipy.stats    import chi2
 
 
 from concurrent.futures import ProcessPoolExecutor
