@@ -25,7 +25,7 @@ def filter(df,J:float,v:int,ef:str, state=None):
     
     return L,E
 
-def cutoff(L: list,E: list,NSigma: float=np.inf):
+def cutoff(L: list,E: list,NSigma: float=np.inf, moct=None):
     '''
     Returns Geometries and Energies for Lower < Energy < Upper. 
     Lower = Mean(E)-Std(E)*NSigma 
@@ -40,14 +40,19 @@ def cutoff(L: list,E: list,NSigma: float=np.inf):
         L   = Geometries (Adjusted)     : np.1darray (float)
         E   = Energies   (Adjusted)     : np.1darray (float)  
     '''
+    moct = "mean" if moct is None else moct
 
-    Mean = np.mean(E)
-    Std  = np.std(E)
+    if moct == "mean":
+        moct = np.mean(E)
+    elif moct =="median":
+        moct = np.median(E)
 
-    Upper = Mean+Std*NSigma
-    Lower = Mean-Std*NSigma
+    std  = np.std(E)
 
-    data = [[L[num], e] for num, e in enumerate(E) if Lower<= e <=Upper]
+    upper = moct+std*NSigma
+    lower = moct-std*NSigma
+
+    data = [[L[num], e] for num, e in enumerate(E) if lower<= e <=upper]
     data = np.transpose(data)
     return data
 
@@ -87,3 +92,20 @@ def plot_LE(L,E,line = False,J = None, v = None, ef = None):
     plt.grid(which = "both")
     plt.xticks(fontsize = 20)
     plt.yticks(fontsize = 20)
+
+def duo_filter(Duo, J, v, ef):
+    Duo=Duo[(Duo["J"]==J)&(Duo["v"]==v)&(Duo["e/f"]==ef)&(Duo["Manifold"]=="A2Sigma+")]
+    return Duo["E"].to_numpy()[0]
+
+def le_wrt_duo(df, Duo, J, v, ef,lock=None):
+
+    lock = 10 if lock is None else lock
+
+    L,E = filter(df, J, v, ef)
+    Center = duo_filter(Duo, J, v, ef)
+    Lower  = Center - lock
+    Upper  = Center + lock
+
+    data_cutoff = [[L[num], e] for num, e in enumerate(E) if Lower<= e <=Upper]
+    L,E = np.transpose(data_cutoff)
+    return L,E

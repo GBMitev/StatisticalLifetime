@@ -62,7 +62,7 @@ def chi_squared(Obs, Calc, ddof=None, reduced = True):
 
     return (Chi_reduced, p_value) if reduced == True else (Chi, p_value)
 
-def make_pickle(fname, cucumber):
+def to_pickle(fname, cucumber):
     with open(fname, "wb") as handle:
         pickle.dump(cucumber, handle, protocol=pickle.HIGHEST_PROTOCOL)
 

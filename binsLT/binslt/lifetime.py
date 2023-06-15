@@ -13,7 +13,7 @@ def fwhm_to_lifetime(fwhm):
     lifetime = hbar/(gamma)
     return lifetime
 
-def lifetime(df,J,v,ef,sigma,bins, LE=None):
+def lifetime(df,J,v,ef,sigma,bins, moct="mean",LE=None):
     '''
     Returns lifetime for a given energy level with Cutoff, NSigma
 
@@ -32,9 +32,10 @@ def lifetime(df,J,v,ef,sigma,bins, LE=None):
     '''
     if LE is None:
         L,E = filter(df, J, v, ef)
-        L,E = cutoff(L,E,NSigma=sigma)
+        L,E = cutoff(L,E,NSigma=sigma,moct=moct)
     else:
         L,E = LE
+        L,E = cutoff(L,E,NSigma=sigma,moct=moct)
 
     count, edges, mean = get_histogram_data(E, bins)
 
@@ -50,7 +51,7 @@ def lifetime(df,J,v,ef,sigma,bins, LE=None):
 
     return lifetime, x0, fwhm, mean
 
-def lifetime_over_bins(df, J, v, ef, sigma, bins, LE = None, progress_bar = False, bar_pos=0):
+def lifetime_over_bins(df, J, v, ef, sigma, bins, moct="mean", LE = None, progress_bar = False, bar_pos=0):
     '''
     Calculates the lifetime as a function of the number of bins in the histogram for a given cutoff NSigma. 
 
@@ -80,15 +81,20 @@ def lifetime_over_bins(df, J, v, ef, sigma, bins, LE = None, progress_bar = Fals
 
     if progress_bar == True:
         bins = tqdm(bins, desc=f"NSigma = {sigma}, J = {J}, v = {v}, e/f = {ef}", position = bar_pos)
+    
+    if LE is None:
+        LE = filter(df, J, v, ef)
 
     for bin in bins:
         try:
-            Lifetimes .append(lifetime(df,J,v,ef,sigma,bin, LE)[0])
+            lifetime_output = lifetime(df,J,v,ef,sigma,bin, moct=moct, LE=LE)
+
+            Lifetimes .append(lifetime_output[0])
             ActiveBins.append(bin)
 
-            x0        .append(lifetime(df,J,v,ef,sigma,bin, LE)[1])
-            FWHM      .append(lifetime(df,J,v,ef,sigma,bin, LE)[2])
-            Mean      .append(lifetime(df,J,v,ef,sigma,bin, LE)[3])
+            x0        .append(lifetime_output[1])
+            FWHM      .append(lifetime_output[2])
+            Mean      .append(lifetime_output[3])
         except:
             pass
     

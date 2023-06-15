@@ -50,7 +50,6 @@ def plot_histogram(Edges, Count, Centered = True):
     '''
     plt.figure(figsize = (9,7))
     plt.bar(Edges[:-1], Count,width=np.diff(Edges),color="black", align="edge")
-    
 
     xlabel = r"$E-\langle E \rangle$ / cm $^{-1}$" if Centered == True else r"$E$"
     plt.xlabel(xlabel, fontsize = 20)
