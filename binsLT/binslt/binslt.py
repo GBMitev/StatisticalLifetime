@@ -125,6 +125,11 @@ class BinSLT:
             pickle.dump(self, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     def make_sandwich(self,fname):
+        if fname[-4:] == ".blt":
+            pass
+        else:
+            fname += ".blt"
+            
         with open(fname, 'wb') as handle:
             pickle.dump(self, handle, protocol=pickle.HIGHEST_PROTOCOL)        
     

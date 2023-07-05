@@ -150,3 +150,6 @@ def gamma_estimate(Edges, Count, **kwargs):
         plot_gamma(Erange, Hrange, min_idx, max_idx)
     
     return FWHM_Interp_Measurement
+
+def add_histogram(Edges, Count, Centered = True):
+    plt.bar(Edges[:-1], Count,width=np.diff(Edges),color="black", align="edge")
