@@ -14,7 +14,6 @@ scipy = "^1.10.1"
 quantiphy = "^2.19"
 tqdm = "^4.65.0"
 uncertainties = "^3.1.7"
-sklearn = "^0.0.post5"
 pandarallel = "^1.6.5"
 
 

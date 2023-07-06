@@ -23,5 +23,4 @@ from scipy.interpolate import splrep, BSpline
 #https://python.plainenglish.io/my-favorite-way-to-smooth-noisy-data-with-python-bd28abe4b7d0
 from scipy.signal import savgol_filter
 
-from sklearn.metrics import r2_score
 from time import time
